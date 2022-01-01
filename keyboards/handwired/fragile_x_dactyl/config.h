@@ -11,9 +11,8 @@
 #define MATRIX_ROWS 12
 #define MATRIX_COLS 6
 
-#define MATRIX_ROW_PINS { A0, A1, B2, B3, A8, A9 }
-#define MATRIX_COL_PINS { B0, B1, B12, B13, B14, B15 }
-
+#define MATRIX_ROW_PINS { A0, A1, B0, B1, A15, B3 }
+#define MATRIX_COL_PINS { B12, B13, B14, B15, A8, A10 }
 #define DIODE_DIRECTION COL2ROW
 
 #define SPLIT_HAND_PIN B10
@@ -47,3 +46,5 @@
 #define CPI_1 2000
 #define CPI_2 4000
 #define CPI_3 8000
+
+#define COMBO_COUNT 1
