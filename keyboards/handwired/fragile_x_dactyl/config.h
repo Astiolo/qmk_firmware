@@ -48,3 +48,12 @@
 #define CPI_3 8000
 
 #define COMBO_COUNT 1
+
+// Defines for OLED data transfer between sides
+#ifdef OLED_ENABLE
+// #define SPLIT_TRANSPORT_MIRROR
+#define SPLIT_LAYER_STATE_ENABLE
+// #define SPLIT_MODS_ENABLE
+// #define SPLIT_WPM_ENABLE
+// #define SPLIT_OLED_ENABLE
+#endif
