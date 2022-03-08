@@ -2,7 +2,7 @@
 
 #include "drivers/sensors/pmw3360.h"
 
-#include "print.h"
+// #include "print.h"
 
 static int8_t scroll_h;
 static int8_t scroll_v;
@@ -17,10 +17,10 @@ bool oled_task_kb(void) {
 
 void keyboard_post_init_user(void) {
   // Customise these values to desired behaviour
-  debug_enable=true;
-  debug_matrix=true;
-  debug_keyboard=true;
-  //debug_mouse=true;
+  // debug_enable=true;
+  // debug_matrix=true;
+  // debug_keyboard=true;
+  // debug_mouse=true;
 }
 
 // void pointing_device_init_kb(void){
@@ -43,6 +43,7 @@ void keyboard_post_init_user(void) {
 report_mouse_t pointing_device_task_kb(report_mouse_t mouse_report) {
     if (!is_keyboard_master()) return mouse_report;
 
+    // dprintf("mouse x: %d, y: %d\n", mouse_report.x, mouse_report.y);
     int8_t clamped_x = mouse_report.x, clamped_y = mouse_report.y;
     mouse_report.x = 0;
     mouse_report.y = 0;

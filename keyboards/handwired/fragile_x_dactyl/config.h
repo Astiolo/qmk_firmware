@@ -11,7 +11,8 @@
 #define MATRIX_ROWS 12
 #define MATRIX_COLS 6
 
-#define MATRIX_ROW_PINS { A0, A1, B0, B1, A15, B3 }
+// #define MATRIX_ROW_PINS { A0, A1, C15, B1, A15, B3 }
+#define MATRIX_ROW_PINS { A15, B3, B4, B5, B6, B7}
 #define MATRIX_COL_PINS { B12, B13, B14, B15, A8, A10 }
 #define DIODE_DIRECTION COL2ROW
 
@@ -30,22 +31,33 @@
 
 /* i2c config for oleds (From Tractyl f411)*/
 #define I2C_DRIVER        I2CD1
-#define I2C1_SCL_PIN      B8
+#define I2C1_SCL_PIN      B8 
 #define I2C1_SDA_PIN      B9
 #define I2C1_SCL_PAL_MODE 4
 #define I2C1_SDA_PAL_MODE 4
-// #define I2C1_CLOCK_SPEED  400000
+#define I2C1_CLOCK_SPEED  400000
 /* For Legacy Compatibility: */
 #define I2C1_SCL 8
 #define I2C1_SDA 9
 
 
 /* optical sensor settings */
-#define PMW3360_CS_PIN SPI_SS_PIN
 #define SCROLL_DIVIDER 12
 #define CPI_1 2000
 #define CPI_2 4000
 #define CPI_3 8000
+/* SPI Settings for Optical Sensor */
+#define SPI_DRIVER                           SPID1
+#define SPI_SCK_PIN                          A5
+#define SPI_SCK_PAL_MODE                     5
+#define SPI_MOSI_PIN                         A7
+#define SPI_MOSI_PAL_MODE                    5
+#define SPI_MISO_PIN                         A6
+#define SPI_MISO_PAL_MODE                    5
+/* pmw3360 config  */
+#define PMW3360_CS_PIN                       B0
+#define PMW3360_SPI_MODE                     3
+#define PMW3360_SPI_DIVISOR                  64
 
 #define COMBO_COUNT 1
 
