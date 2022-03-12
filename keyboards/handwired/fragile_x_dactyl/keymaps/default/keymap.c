@@ -72,30 +72,66 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 #ifdef OLED_ENABLE
-bool oled_task_user(void) {
-    // Host Keyboard Layer Status
-    oled_write_P(PSTR("Fragile X Dactyl\n\n"), false);
-    oled_write_P(PSTR("Layer: "), false);
+uint16_t startup_timer;
 
-    switch (get_highest_layer(layer_state)) {
-        case _QWERTY:
-            oled_write_P(PSTR("Default\n"), false);
-            break;
-        case _GAME:
-            oled_write_P(PSTR("Game\n"), false);
-            break;
-        case _MATH:
-            oled_write_P(PSTR("Math\n"), false);
-            break;
-        case _MOUSE_L:
-            oled_write_P(PSTR("Mouse L\n"), false);
-            break;
-        case _MOUSE_R:
-            oled_write_P(PSTR("Mouse R\n"), false);
-            break;
-        default:
-            // Or use the write_ln shortcut over adding '\n' to the end of your string
-            oled_write_ln_P(PSTR("Undefined"), false);
+oled_rotation_t oled_init_user(oled_rotation_t rotation) {
+    startup_timer = timer_read();
+    oled_clear();
+    return rotation;
+}
+static void render_logo(void) {
+    static const char PROGMEM raw_logo[] = {
+        0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 24, 60, 60,124,252,252,252,252,188, 60, 24,  0,  0,  0,  0,  0, 24, 60,188,252,252,252,252,124, 60, 60, 24,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+        0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  3,  7, 15, 31, 62,252,248,240,248,252, 62, 31, 15,  7,  3,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 
+        0,  0,  0,  0, 32,224, 32,160, 32, 96,  0,128,128,  0,128,128,  0,  0,  0,128,128,128,  0,  0,  0,  0,128,128,  0,128,128,  0,128,128,160,  0,  0,  0,  0,  0, 32,224,  0,  0,  0,  0,  0,128,128,128,  0,  0,  0,  0,  0,  0,  0,  0,  0, 96,240,120,124, 62, 31, 15,  7,  3,  7, 15, 31, 62,124,120,240, 96,  0,  0,  0,  0,  0,  0,  0, 32,224, 32, 32, 64,128,  0,  0,  0,128,128,128,  0,  0,  0,  0,128,128,128,128,  0,  0,128,192,128,128,128,  0,128,128,128,  0,128,128,128,  0,  0, 32,224,  0,  0,  0,  0,  0,  0, 
+        0,  0,  0,  0, 16, 31, 17,  3,  0,  0,  0, 16, 31, 17, 16, 16,  0,  0, 12, 18, 18, 18, 31, 16,  0, 15, 80, 80, 81, 63,  0,  0, 16, 16, 31, 16, 16,  0,  0, 16, 16, 31, 16, 16,  0,  0, 15, 18, 18, 18, 19,  0,  0, 12, 30, 30, 30, 30, 30, 31, 30, 30, 30, 12,  0,  0,  0,  0,  0,  0,  0, 12, 30, 30, 30, 31, 30, 30, 30, 30, 30, 12,  0, 16, 31, 16, 16,  8,  7,  0,  0, 12, 18, 18, 18, 31, 16,  0, 15, 16, 16, 16,  9,  0,  0,  0, 15, 16, 16, 16,  8,  0, 65, 70,120, 76,  3,  0,  0, 16, 16, 31, 16, 16,  0,  0,  0,  0,
+    };
+    oled_write_raw_P(raw_logo, sizeof(raw_logo));
+}
+
+
+bool oled_task_user(void) {
+  static bool finished_timer = false;
+    if (!finished_timer && (timer_elapsed(startup_timer) < 20000)) {
+        render_logo();
+    } else {
+        if (!finished_timer) {
+            oled_clear();
+            finished_timer = true;
+        }
+        // Host Keyboard Layer Status
+        oled_write_P(PSTR("Layer: "), false);
+        switch (get_highest_layer(layer_state)) {
+            case _QWERTY:
+                oled_write_P(PSTR("Default\n"), false);
+                break;
+            case _GAME:
+                oled_write_P(PSTR("Game\n"), false);
+                break;
+            case _MATH:
+                oled_write_P(PSTR("Math\n"), false);
+                break;
+            case _MOUSE_L:
+                oled_write_P(PSTR("Mouse L\n"), false);
+                break;
+            case _MOUSE_R:
+                oled_write_P(PSTR("Mouse R\n"), false);
+                break;
+            default:
+                oled_write_P(PSTR("Undefined\n"), false);
+        }
+        // Write lock status
+        led_t led_state = host_keyboard_led_state();
+        oled_write_P(PSTR("\nNUM: "), false);
+        oled_write_char(led_state.num_lock ? 0x04 : 0x09, false);
+        oled_write_P(PSTR(" CAP: "), false);
+        oled_write_char(led_state.caps_lock ? 0x04 : 0x09, false);
+        oled_write_P(PSTR(" SCR: "), false);
+        oled_write_char(led_state.scroll_lock ? 0x04 : 0x09, false);
+
+        // TODO: Write actual DPI
+        oled_write_P(PSTR("\nDPI: 300"), false);
+        
     }
     return false;
 }
