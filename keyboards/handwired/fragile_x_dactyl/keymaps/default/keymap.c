@@ -1,11 +1,13 @@
 #include QMK_KEYBOARD_H
 
+// Layers
 #define _QWERTY 0
 #define _GAME 1
 #define _MATH 2
 #define _MOUSE_L 3
 #define _MOUSE_R 4
 
+// Keymap aliases
 #define GAME TG(_GAME)
 #define MATH LT(_MATH, KC_RWIN)
 #define MOUSE_R LT(_MOUSE_R, KC_ENT)
@@ -89,10 +91,28 @@ static void render_logo(void) {
     oled_write_raw_P(raw_logo, sizeof(raw_logo));
 }
 
+layer_state_t layer_state_set_user(layer_state_t state) {
+    switch (get_highest_layer(state)) {
+    case _MATH:
+        fxd_mouse_adjust = true;
+        break;
+    case _MOUSE_L:
+        fxd_mouse_adjust = false;
+        fxd_mouse_right = false;
+        break;
+    default: //  for any other layers, or the default layer
+        fxd_mouse_adjust = false;
+        fxd_mouse_right = true;
+        break;
+    }
+    return state;
+}
+
 
 bool oled_task_user(void) {
-  static bool finished_timer = false;
-    if (!finished_timer && (timer_elapsed(startup_timer) < 20000)) {
+    static bool finished_timer = false;
+
+    if (!finished_timer && (timer_elapsed(startup_timer) < 5000)) {
         render_logo();
     } else {
         if (!finished_timer) {
@@ -129,8 +149,10 @@ bool oled_task_user(void) {
         oled_write_P(PSTR(" SCR: "), false);
         oled_write_char(led_state.scroll_lock ? 0x04 : 0x09, false);
 
-        // TODO: Write actual DPI
-        oled_write_P(PSTR("\nDPI: 300"), false);
+        // TODO: Write actual CPI
+        char str[25];
+        sprintf(str, "\nCPI:%5d SCR:%3d", fxd_kb_config.cpi, SCROLL_MAX - fxd_kb_config.scroll);
+        oled_write_P(PSTR(str), false);
         
     }
     return false;

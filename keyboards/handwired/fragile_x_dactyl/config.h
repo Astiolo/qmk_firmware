@@ -41,10 +41,11 @@
 
 
 /* optical sensor settings */
-#define SCROLL_DIVIDER 12
-#define CPI_1 2000
-#define CPI_2 4000
-#define CPI_3 8000
+#define SCROLL_DEF 80
+#define SCROLL_MAX 200
+#define CPI_DEF 1500
+#define CPI_MAX 20000
+
 /* SPI Settings for Optical Sensor */
 #define SPI_DRIVER                           SPID1
 #define SPI_SCK_PIN                          A5
@@ -66,5 +67,6 @@
 #define SPLIT_LAYER_STATE_ENABLE
 // #define SPLIT_MODS_ENABLE
 // #define SPLIT_WPM_ENABLE
-// #define SPLIT_OLED_ENABLE
+#define SPLIT_OLED_ENABLE
+#define SPLIT_POINTING_ENABLE
 #endif

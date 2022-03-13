@@ -29,3 +29,16 @@
     { XXX, R63, R72, R71, R61, R70 }, \
 \
 }
+
+
+typedef union {
+  uint32_t raw;
+  struct {
+    uint16_t cpi;
+    uint16_t scroll;
+  };
+} config_fxd_t;
+
+extern config_fxd_t fxd_kb_config;
+extern bool fxd_mouse_right;
+extern bool fxd_mouse_adjust;
